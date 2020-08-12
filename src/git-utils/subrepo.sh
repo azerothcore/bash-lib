@@ -6,10 +6,6 @@
 CUR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/"
 
 echo "> Init and updating submodules..."
-[ ! -d "$CUR_PATH/../git-subrepo" ] && git submodule add --force https://github.com/ingydotnet/git-subrepo apps/git-subrepo 
-git submodule update --init apps/git-subrepo
-
-source "$CUR_PATH/../git-subrepo/.rc"
 
 function subrepoUpdate() {
     repo=$1
