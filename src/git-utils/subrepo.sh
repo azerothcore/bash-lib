@@ -34,11 +34,11 @@ function subrepoUpdate() {
     echo "> Pulling subrepo on $folder -b $branch..."
     git subrepo pull -b "$branch" "$folder"
 
+    curCommit=$(git rev-parse HEAD)
+
     # this empty commit is used to produce meaningful commits message when pushing with squash to external subrepos
     # instead of picking the last commit message as the text for the entire squashed commit
     git commit --allow-empty -m "sync(subrepo): changes from/to $repo"
-
-    curCommit=$(git rev-parse HEAD)
 
     echo "> Pushing subrepo on $folder -b $branch..."
     git subrepo push  -b "$branch" -s "$folder"
