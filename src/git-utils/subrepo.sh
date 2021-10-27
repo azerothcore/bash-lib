@@ -32,7 +32,7 @@ function subrepoUpdate() {
 
     git subrepo clean "$folder"
     echo "> Pulling subrepo on $folder -b $branch..."
-    git subrepo pull -b "$branch" "$folder"
+    git subrepo pull -b "$branch" "$folder" --message="sync(subrepo): pull changes from $repo"
 
     curCommit=$(git rev-parse HEAD)
 
@@ -48,7 +48,7 @@ function subrepoUpdate() {
     # pull force to sync the .gitrepo file after the hard reset
     # we write the commit again after the soft reset to keep it in the main repo history
     # NOTE: it will be created only if we had changes
-    git subrepo pull -f -b "$branch" "$folder" --message="sync(subrepo): changes from/to $repo"
+    git subrepo pull -f -b "$branch" "$folder" --message="sync(subrepo): push changes to $repo"
     
     git subrepo clean --ALL --force
 }
