@@ -14,6 +14,8 @@ function subrepoUpdate() {
 
     toClone=$(git ls-remote --heads "$repo" "$branch" | wc -l)
 
+    curCommit=$(git rev-parse HEAD)
+
     if [[ -d "$folder" ]]; then
         if [[ ! -f "$folder/.gitrepo" ]]; then
             git subrepo init "$folder" -r "$repo" -b "$branch"
@@ -30,7 +32,7 @@ function subrepoUpdate() {
     fi
 
     git subrepo clean "$folder"
-    git subrepo pull "$folder"
+    git subrepo pull -f --message="ci: sync process for $repo" "$folder"
     git subrepo push "$folder" -s
     git subrepo clean "$folder"
 }
