@@ -32,7 +32,18 @@ function subrepoUpdate() {
     fi
 
     git subrepo clean "$folder"
-    git subrepo pull -f --message="ci: sync process for $repo" "$folder"
+    git subrepo pull -f "$folder"
+
+    # this empty commit is used to produce meaningful commits message when pushing with squash to external subrepos
+    # instead of picking the last commit message as the text for the entire squashed commit
+    git commit --allow-empty -m "sync(subrepo): changes from/to $repo"
+
     git subrepo push "$folder" -s
     git subrepo clean "$folder"
+
+    git reset --soft $curCommit
+
+    # we write the commit again after the soft reset to keep it in the main repo history
+    # NOTE: it will be created only if we had changes
+    git commit -m "sync(subrepo): changes from/to $repo" || true
 }
