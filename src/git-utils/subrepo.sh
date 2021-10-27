@@ -5,8 +5,6 @@
 
 CUR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/"
 
-echo "> Init and updating submodules..."
-
 function subrepoUpdate() {
     repo=$1
     branch=$2
@@ -18,27 +16,32 @@ function subrepoUpdate() {
 
     if [[ -d "$folder" ]]; then
         if [[ ! -f "$folder/.gitrepo" ]]; then
+            echo "> Initializing subrepo for existing $folder -r $repo -b $branch..."
             git subrepo init "$folder" -r "$repo" -b "$branch"
         fi
 
         if [[ $toClone -eq 0 ]]; then
-            git subrepo push "$folder"
+            echo "> Pushing subrepo on $folder -b $branch..."
+            git subrepo push "$folder" -b "$branch"
         fi
     else
         # try-catch
         set +e
+        echo "> Cloning subrepo for $folder $repo -b $branch..."
         git subrepo clone "$repo" "$folder" -b "$branch"
         set -e
     fi
 
     git subrepo clean "$folder"
-    git subrepo pull -f "$folder"
+    echo "> Pulling subrepo on $folder -b $branch..."
+    git subrepo pull -b "$branch" "$folder"
 
     # this empty commit is used to produce meaningful commits message when pushing with squash to external subrepos
     # instead of picking the last commit message as the text for the entire squashed commit
     git commit --allow-empty -m "sync(subrepo): changes from/to $repo"
 
-    git subrepo push "$folder" -s
+    echo "> Pushing subrepo on $folder -b $branch..."
+    git subrepo push  -b "$branch" -s "$folder"
     git subrepo clean "$folder"
 
     git reset --soft $curCommit
