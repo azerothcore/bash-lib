@@ -10,6 +10,8 @@ function subrepoUpdate() {
     branch=$2
     folder=$3
 
+    folderName="$(basename $folder)"
+
     toClone=$(git ls-remote --heads "$repo" "$branch" | wc -l)
 
     if [[ -d "$folder" ]]; then
@@ -32,13 +34,13 @@ function subrepoUpdate() {
 
     git subrepo clean "$folder"
     echo "> Pulling subrepo on $folder -b $branch..."
-    git subrepo pull -b "$branch" "$folder" --message="sync(subrepo): pull changes from $repo"
+    git subrepo pull -b "$branch" "$folder" --message="sync(subrepo): pull changes from $folderName"
 
     curCommit=$(git rev-parse HEAD)
 
     # this empty commit is used to produce meaningful commits message when pushing with squash to external subrepos
     # instead of picking the last commit message as the text for the entire squashed commit
-    git commit --allow-empty -m "sync(subrepo): changes from/to $repo"
+    git commit --allow-empty -m "sync(subrepo): changes from $folderName"
 
     echo "> Pushing subrepo on $folder -b $branch..."
     git subrepo push  -b "$branch" -s "$folder"
@@ -48,7 +50,7 @@ function subrepoUpdate() {
     # pull force to sync the .gitrepo file after the hard reset
     # we write the commit again after the soft reset to keep it in the main repo history
     # NOTE: it will be created only if we had changes
-    git subrepo pull -f -b "$branch" "$folder" --message="sync(subrepo): push changes to $repo"
+    git subrepo pull -f -b "$branch" "$folder" --message="sync(subrepo): push changes to $folderName"
     
     git subrepo clean --ALL --force
 }
