@@ -17,12 +17,12 @@ function subrepoUpdate() {
     if [[ -d "$folder" ]]; then
         if [[ ! -f "$folder/.gitrepo" ]]; then
             echo "> Initializing subrepo for existing $folder -r $repo -b $branch..."
-            git subrepo init "$folder" -r "$repo" -b "$branch"
+            git subrepo init -r "$repo"  -b "$branch" "$folder"
         fi
 
         if [[ $toClone -eq 0 ]]; then
-            echo "> Pushing subrepo on $folder -b $branch..."
-            git subrepo push "$folder" -b "$branch"
+            echo "> Pushing subrepo on $folder $repo -b $branch..."
+            git subrepo push -r "$repo"  -b "$branch" "$folder"
         fi
     else
         # try-catch
@@ -34,7 +34,7 @@ function subrepoUpdate() {
 
     git subrepo clean "$folder"
     echo "> Pulling subrepo on $folder -b $branch..."
-    git subrepo pull -b "$branch" "$folder" --message="sync(subrepo): pull changes from $folderName"
+    git subrepo pull -r "$repo"  -b "$branch" "$folder" --message="sync(subrepo): pull changes from $folderName"
 
     curCommit=$(git rev-parse HEAD)
 
@@ -43,14 +43,14 @@ function subrepoUpdate() {
     git commit --allow-empty -m "sync(subrepo): changes from $folderName"
 
     echo "> Pushing subrepo on $folder -b $branch..."
-    git subrepo push  -b "$branch" -s "$folder"
+    git subrepo push  -r "$repo" -b "$branch" -s "$folder"
 
     git reset --hard $curCommit
 
     # pull force to sync the .gitrepo file after the hard reset
     # we write the commit again after the soft reset to keep it in the main repo history
     # NOTE: it will be created only if we had changes
-    git subrepo pull -f -b "$branch" "$folder" --message="sync(subrepo): push changes to $folderName"
+    git subrepo pull -f -r "$repo"  -b "$branch" "$folder" --message="sync(subrepo): push changes to $folderName"
     
     git subrepo clean --ALL --force
 }
