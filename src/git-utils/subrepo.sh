@@ -32,9 +32,12 @@ function subrepoUpdate() {
         set -e
     fi
 
+    # try-catch
+    set +e
     git subrepo clean "$folder"
     echo "> Pulling subrepo on $folder -b $branch..."
     git subrepo pull -r "$repo"  -b "$branch" "$folder" --message="sync(subrepo): pull changes from $folderName"
+    set -e
 
     curCommit=$(git rev-parse HEAD)
 
