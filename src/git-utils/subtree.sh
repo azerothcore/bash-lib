@@ -16,5 +16,5 @@ function subtreeFlow {
     echo "> Push latest changes to remote subtree: "$prefix" "$repo" "$branch""
     git subtree push --prefix "$prefix" "$repo" "$branch"  --squash
 
-    git subtree split --prefix "$prefix" -b "$branch"  --rejoin 
+    #git subtree split --prefix "$prefix" -b "$branch"  --rejoin 
 }
