@@ -3,8 +3,14 @@ function subtreeFlow {
     local branch=$2
     local prefix="$3"
 
-    echo "> Adding subtree if not exists"
-    git subtree add --prefix "$prefix" "$repo" "$branch"
+    if [[ -d "$prefix" ]]; then
+        echo "> Creating subtree for existing prefix $prefix $repo -b $branch..."
+        git subtree split --prefix "$prefix" -b "$branch"
+    else
+        echo "> Adding subtree if not exists"
+        git subtree add --prefix "$prefix" "$repo" "$branch"
+    fi
+
     echo "> Pulling latest changes from remote subtree: "$prefix" "$repo" "$branch""
     git subtree pull --prefix "$prefix" "$repo" "$branch"  --squash
     echo "> Push latest changes to remote subtree: "$prefix" "$repo" "$branch""
