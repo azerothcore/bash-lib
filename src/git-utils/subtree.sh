@@ -12,7 +12,7 @@ function subtreeFlow {
     fi
 
     echo "> Pulling latest changes from remote subtree: "$prefix" "$repo" "$branch""
-    git subtree pull --prefix "$prefix" "$repo" "$branch" --squash -m "sync(subtree): pull from $repo"
+    git subtree pull --prefix "$prefix" "$repo" "$branch" --squash
     echo "> Push latest changes to remote subtree: "$prefix" "$repo" "$branch""
     git subtree push --prefix "$prefix" "$repo" "$branch"
 
