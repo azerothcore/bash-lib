@@ -4,8 +4,8 @@ function subtreeFlow {
     local prefix="$3"
 
     if [[ -d "$prefix" ]]; then
-        echo "> Creating subtree for existing prefix $prefix $repo -b $branch..."
-        git subtree split --prefix "$prefix" -b "$branch"
+        echo "> Split subtree for existing prefix $prefix $repo -b $branch..."
+        #git subtree split --prefix "$prefix" -b "$branch"
     else
         echo "> Adding subtree if not exists"
         git subtree add --prefix "$prefix" "$repo" "$branch"
