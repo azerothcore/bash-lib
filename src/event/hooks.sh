@@ -5,7 +5,8 @@ function acore_event_runHooks() {
   echo "Running hooks: $hook_name"
   for i in "${SRCS[@]}"
   do
-  	$i # run registered hook
+    # run registered hook with the rest of the arguments
+  	$i "${@:2}"
   done
 }
 
