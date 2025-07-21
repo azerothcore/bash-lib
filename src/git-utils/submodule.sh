@@ -33,12 +33,12 @@ pull_submodules_recursive() {
             echo "Submodule $rel_path is in detached HEAD. Trying to pull main or master..."
             if git show-ref --verify --quiet refs/remotes/$REMOTE/main; then
                 echo "Pulling submodule: $rel_path ($REMOTE/main)"
-                git pull "$REMOTE" main || echo "Warning: Could not pull main for $rel_path."
                 git checkout main || echo "Warning: Could not checkout main for $rel_path."
+                git pull "$REMOTE" main || echo "Warning: Could not pull main for $rel_path."
             elif git show-ref --verify --quiet refs/remotes/$REMOTE/master; then
                 echo "Pulling submodule: $rel_path ($REMOTE/master)"
-                git pull "$REMOTE" master || echo "Warning: Could not pull master for $rel_path."
                 git checkout master || echo "Warning: Could not checkout master for $rel_path."
+                git pull "$REMOTE" master || echo "Warning: Could not pull master for $rel_path."
             else
                 echo "Warning: $submodule_path is in detached HEAD and neither main nor master found. Skipping pull."
             fi
